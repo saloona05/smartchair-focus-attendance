@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Chair System</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6fb;color:#1f2937}
 header{background:#2563eb;color:white;padding:30px}
@@ -27,6 +28,14 @@ th{background:#eef2ff}
 .progress{height:16px;background:#e5e7eb;border-radius:10px;margin-top:8px;overflow:hidden}
 .progress div{height:100%;background:#2563eb;width:80%}
 .badge{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:bold}
+.input{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;margin-top:8px}
+.small{font-size:13px;color:#6b7280}
+.login-box{max-width:420px;margin:auto}
+.notice{padding:12px 14px;border-radius:10px;background:#eff6ff;margin-top:12px}
+.list{margin:10px 0 0;padding-left:18px}
+canvas{max-width:100%;margin-top:15px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
 .present{background:#dcfce7;color:#166534}
 .absent{background:#fee2e2;color:#991b1b}
 .warning{background:#fef3c7;color:#92400e}
@@ -47,6 +56,7 @@ th{background:#eef2ff}
 <button class="tab active" onclick="showTab('student')">Student Check-In</button>
 <button class="tab" onclick="showTab('dashboard')">Instructor Dashboard</button>
 <button class="tab" onclick="showTab('studentStats')">Student Performance</button>
+<button class="tab" onclick="showTab('login')">Login</button>
 </div>
 
 <!-- STUDENT CHECK IN -->
@@ -180,6 +190,61 @@ th{background:#eef2ff}
 </table>
 
 <p style="margin-top:20px"><strong>Tip:</strong> Maintaining at least 90% attendance improves academic performance and engagement in class.</p>
+
+<div class="two-col" style="margin-top:25px">
+<div>
+<h3>Weekly Attendance Tracker</h3>
+<table>
+<tr><th>Week</th><th>Rate</th><th>Comment</th></tr>
+<tr><td>Week 1</td><td>100%</td><td>Excellent consistency</td></tr>
+<tr><td>Week 2</td><td>80%</td><td>One missed class</td></tr>
+<tr><td>Week 3</td><td>90%</td><td>Strong improvement</td></tr>
+<tr><td>Week 4</td><td>75%</td><td>Needs attention</td></tr>
+</table>
+</div>
+<div>
+<h3>Student Alerts</h3>
+<div class="notice"><strong>Warning:</strong> Your attendance dropped below 85% in Week 4.</div>
+<div class="notice"><strong>Reminder:</strong> Return your phone to the desk sensor within 10 minutes after emergency use.</div>
+<div class="notice"><strong>Goal:</strong> Attend the next 3 classes to raise your attendance above 90%.</div>
+</div>
+</div>
+
+<h3 style="margin-top:25px">Attendance Chart</h3>
+<canvas id="attendanceChart" height="120"></canvas>
+
+<h3 style="margin-top:25px">Focus Score</h3>
+<p class="small">This score estimates classroom discipline based on timely check-in, seat presence, and reduced phone removal.</p>
+<div class="metric-grid">
+<div class="metric"><span>Focus Score</span><strong>88%</strong></div>
+<div class="metric"><span>On-Time Check-Ins</span><strong>92%</strong></div>
+<div class="metric"><span>Emergency Phone Events</span><strong>2</strong></div>
+</div>
+</div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login" class="tabContent" style="display:none">
+<div class="card login-box">
+<h2>Smart Chair Login</h2>
+<p class="small">This prototype login page shows how students and professors could access personalized attendance records and dashboard features.</p>
+<label>University Email</label>
+<input class="input" type="email" placeholder="name@sharjah.ac.ae">
+<label style="display:block;margin-top:12px">Password</label>
+<input class="input" type="password" placeholder="Enter password">
+<label style="display:block;margin-top:12px">Login As</label>
+<select class="input">
+<option>Student</option>
+<option>Professor</option>
+<option>Administrator</option>
+</select>
+<button style="margin-top:14px;background:#2563eb;color:#fff">Sign In</button>
+<div class="notice">After login, students can view their attendance performance, focus score, weekly progress, and reminders. Professors can access analytics and attendance records.</div>
+<ul class="list">
+<li>Student access to attendance performance and alerts</li>
+<li>Professor access to attendance dashboard and reports</li>
+<li>Administrator access to class and device management</li>
+</ul>
 </div>
 </div>
 
@@ -194,7 +259,7 @@ document.getElementById(id).style.display='block';
 const buttons=document.querySelectorAll('.tab');
 buttons.forEach(b=>b.classList.remove('active'));
 
-event.target.classList.add('active');
+if (window.event && window.event.target) { window.event.target.classList.add('active'); }
 }
 
 let phonePlaced=false
@@ -220,8 +285,27 @@ function leaveSeat(){
 document.getElementById('attendance').innerText="Absent"
 document.getElementById('status').innerText="Seat empty. Student marked absent"
 }
+
+window.addEventListener('load', function(){
+  const chartEl = document.getElementById('attendanceChart');
+  if (chartEl) {
+    new Chart(chartEl, {
+      type: 'bar',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{ label: 'Attendance %', data: [100, 80, 90, 75] }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, max: 100 } }
+      }
+    });
+  }
+});
 </script>
 
 </body>
 </html>
+
 
