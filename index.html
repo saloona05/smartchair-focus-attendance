@@ -1,581 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Chair System</title>
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --accent: #2563eb;
-      --accent-2: #10b981;
-      --warn: #f59e0b;
-      --danger: #ef4444;
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      background: linear-gradient(135deg, #1d4ed8, #2563eb 60%, #60a5fa);
-      color: white;
-      padding: 36px 20px;
-    }
-
-    .wrap {
-      max-width: 1150px;
-      margin: 0 auto;
-      padding: 0 18px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 22px;
-      align-items: center;
-    }
-
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: 2.3rem;
-      line-height: 1.1;
-    }
-
-    .hero p {
-      margin: 0;
-      color: rgba(255,255,255,0.92);
-      line-height: 1.6;
-      font-size: 1rem;
-    }
-
-    .hero-card {
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 22px;
-      padding: 18px;
-      backdrop-filter: blur(8px);
-    }
-
-    .hero-stat {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .mini {
-      background: rgba(255,255,255,0.14);
-      border-radius: 16px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .mini strong {
-      display: block;
-      font-size: 1.4rem;
-      margin-bottom: 6px;
-    }
-
-    main {
-      padding: 28px 0 40px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      border: none;
-      background: white;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-weight: 700;
-      color: var(--muted);
-      cursor: pointer;
-      box-shadow: var(--shadow);
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: white;
-    }
-
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    h2, h3 {
-      margin-top: 0;
-    }
-
-    .muted {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .qr-box {
-      border: 2px dashed #cbd5e1;
-      border-radius: 18px;
-      padding: 20px;
-      text-align: center;
-      background: #f8fafc;
-      margin: 18px 0;
-    }
-
-    .qr {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto 12px;
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-    }
-
-    .qr span {
-      background: #111827;
-      border-radius: 2px;
-    }
-
-    .phone-pad {
-      border: 2px solid #93c5fd;
-      background: #eff6ff;
-      border-radius: 18px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .phone-visual {
-      width: 120px;
-      height: 210px;
-      margin: 14px auto;
-      border: 4px solid #111827;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #dbeafe, #bfdbfe);
-      position: relative;
-      transition: transform .25s ease, box-shadow .25s ease;
-    }
-
-    .phone-visual::before {
-      content: "";
-      width: 44px;
-      height: 6px;
-      background: #111827;
-      border-radius: 999px;
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .phone-on-pad {
-      transform: scale(0.96);
-      box-shadow: 0 0 0 6px rgba(37,99,235,0.15);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    button.action {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      color: white;
-    }
-
-    .primary { background: var(--accent); }
-    .success { background: var(--accent-2); }
-    .warning { background: var(--warn); color: #111827 !important; }
-    .danger { background: var(--danger); }
-
-    .status {
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 14px;
-      font-weight: 700;
-      background: #eef2ff;
-      color: #3730a3;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .info {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 14px;
-      background: #fafafa;
-    }
-
-    .info label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 6px;
-    }
-
-    .info strong {
-      font-size: 1.05rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 14px;
-      overflow: hidden;
-      border-radius: 16px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.95rem;
-    }
-
-    th {
-      background: #eff6ff;
-      color: #1e3a8a;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .present { background: #dcfce7; color: #166534; }
-    .warning-pill { background: #fef3c7; color: #92400e; }
-    .absent { background: #fee2e2; color: #991b1b; }
-
-    .analytics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .metric {
-      padding: 18px;
-      border-radius: 16px;
-      background: #f8fafc;
-      border: 1px solid var(--line);
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 1.8rem;
-      margin-top: 8px;
-    }
-
-    .bar-wrap {
-      margin-top: 20px;
-    }
-
-    .bar {
-      height: 18px;
-      border-radius: 999px;
-      background: #e5e7eb;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .bar > div {
-      height: 100%;
-      background: linear-gradient(90deg, #2563eb, #60a5fa);
-      width: 84%;
-    }
-
-    footer {
-      color: var(--muted);
-      text-align: center;
-      padding: 10px 18px 30px;
-      font-size: 0.92rem;
-    }
-
-    @media (max-width: 900px) {
-      .hero, .grid { grid-template-columns: 1fr; }
-      .analytics, .detail-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Chair System</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6fb;color:#1f2937}
+header{background:#2563eb;color:white;padding:30px}
+.container{max-width:1100px;margin:auto;padding:20px}
+h1{margin:0}
+.tabs{display:flex;gap:10px;margin-top:20px;margin-bottom:20px;flex-wrap:wrap}
+button{padding:10px 16px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+.tab{background:#e5e7eb}
+.tab.active{background:#2563eb;color:white}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:20px;box-shadow:0 10px 25px rgba(0,0,0,0.05)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.qr{height:120px;width:120px;background:#111;margin:auto;margin-bottom:10px}
+.phone{width:100px;height:180px;border:4px solid #111;border-radius:20px;margin:auto;background:#dbeafe}
+.status{margin-top:15px;padding:10px;background:#eef2ff;border-radius:8px;font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+th{background:#eef2ff}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px}
+.metric{background:#f8fafc;padding:15px;border-radius:10px;text-align:center}
+.metric strong{font-size:22px;display:block;margin-top:5px}
+.progress{height:16px;background:#e5e7eb;border-radius:10px;margin-top:8px;overflow:hidden}
+.progress div{height:100%;background:#2563eb;width:80%}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:bold}
+.present{background:#dcfce7;color:#166534}
+.absent{background:#fee2e2;color:#991b1b}
+.warning{background:#fef3c7;color:#92400e}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap hero">
-      <div>
-        <h1>Smart Chair System</h1>
-        <p>A classroom focus and attendance prototype that combines QR check-in, phone placement on a desk sensor, seat detection, and a website dashboard for attendance tracking and analysis.</p>
-      </div>
-      <div class="hero-card">
-        <div class="hero-stat">
-          <div class="mini"><strong>QR</strong>Desk Check-In</div>
-          <div class="mini"><strong>10 min</strong>Emergency Phone Access</div>
-          <div class="mini"><strong>30 min</strong>Seat Absence Alert</div>
-          <div class="mini"><strong>Dashboard</strong>Attendance Analysis</div>
-        </div>
-      </div>
-    </div>
-  </header>
+<header>
+<div class="container">
+<h1>Smart Chair System</h1>
+<p>Prototype system for reducing phone distraction and automating attendance in classrooms.</p>
+</div>
+</header>
 
-  <main>
-    <div class="wrap">
-      <div class="tabs">
-        <button class="tab-btn active" data-target="student">Student Check-In</button>
-        <button class="tab-btn" data-target="dashboard">Instructor Dashboard</button>
-      </div>
+<div class="container">
 
-      <section id="student" class="screen active">
-        <div class="grid">
-          <div class="card">
-            <h2>Student Attendance Check-In</h2>
-            <p class="muted">This prototype simulates how a student would scan a desk QR code, place their phone on the sensor area, and remain seated to stay marked as present during class.</p>
+<div class="tabs">
+<button class="tab active" onclick="showTab('student')">Student Check-In</button>
+<button class="tab" onclick="showTab('dashboard')">Instructor Dashboard</button>
+<button class="tab" onclick="showTab('studentStats')">Student Performance</button>
+</div>
 
-            <div class="qr-box">
-              <div class="qr" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              </div>
-              <strong>Desk QR Code</strong>
-              <p class="muted">Student scans this code at the start of class.</p>
-            </div>
+<!-- STUDENT CHECK IN -->
+<div id="student" class="tabContent">
+<div class="grid">
+<div class="card">
+<h2>Student Check-In</h2>
+<p>Scan the desk QR code and place your phone on the sensor area to confirm attendance.</p>
+<div class="qr"></div>
+<p style="text-align:center">Desk QR Code</p>
 
-            <div class="phone-pad">
-              <strong>Phone Sensor Area</strong>
-              <div id="phoneVisual" class="phone-visual"></div>
-              <p class="muted">Place your phone here during the lecture to remain checked in.</p>
-              <div class="actions">
-                <button class="action primary" onclick="scanQR()">Scan QR Code</button>
-                <button class="action success" onclick="placePhone()">Place Phone on Sensor</button>
-                <button class="action warning" onclick="takePhone()">Take Phone for Emergency</button>
-                <button class="action danger" onclick="leaveSeat()">Leave Seat</button>
-              </div>
-            </div>
-          </div>
+<h3>Phone Sensor Area</h3>
+<div class="phone"></div>
 
-          <div class="card">
-            <h3>Live Status</h3>
-            <div id="statusBox" class="status">Waiting for student check-in.</div>
+<div style="margin-top:15px">
+<button onclick="scanQR()">Scan QR Code</button>
+<button onclick="placePhone()">Place Phone</button>
+<button onclick="takePhone()">Emergency Call</button>
+<button onclick="leaveSeat()">Leave Seat</button>
+</div>
 
-            <div class="detail-grid">
-              <div class="info">
-                <label>Student Name</label>
-                <strong id="studentName">Sara Mousa</strong>
-              </div>
-              <div class="info">
-                <label>Course</label>
-                <strong>Business Analytics</strong>
-              </div>
-              <div class="info">
-                <label>Phone on Desk</label>
-                <strong id="phoneState">No</strong>
-              </div>
-              <div class="info">
-                <label>Seat Occupied</label>
-                <strong id="seatState">Yes</strong>
-              </div>
-              <div class="info">
-                <label>Attendance Status</label>
-                <strong id="attendanceState">Not Recorded</strong>
-              </div>
-              <div class="info">
-                <label>Emergency Timer</label>
-                <strong id="timerState">0 min</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+<div id="status" class="status">Waiting for check‑in...</div>
+</div>
 
-      <section id="dashboard" class="screen">
-        <div class="card">
-          <h2>Instructor Attendance Dashboard</h2>
-          <p class="muted">This website dashboard shows how attendance data can be viewed and analyzed by instructors. It displays student status, focus-related attendance behavior, and overall class trends.</p>
+<div class="card">
+<h2>Student Details</h2>
+<p><strong>Name:</strong> Sara Mousa</p>
+<p><strong>Course:</strong> Business Analytics</p>
+<p><strong>Seat Sensor:</strong> Active</p>
+<p><strong>Phone Detected:</strong> <span id="phoneState">No</span></p>
+<p><strong>Attendance Status:</strong> <span id="attendance">Not Recorded</span></p>
+</div>
+</div>
+</div>
 
-          <div class="analytics">
-            <div class="metric"><span>Total Students</span><strong>32</strong></div>
-            <div class="metric"><span>Present Today</span><strong>27</strong></div>
-            <div class="metric"><span>Attendance Rate</span><strong>84%</strong></div>
-          </div>
+<!-- INSTRUCTOR DASHBOARD -->
+<div id="dashboard" class="tabContent" style="display:none">
+<div class="card">
+<h2>Instructor Dashboard</h2>
+<p>Attendance analytics for today's lecture.</p>
 
-          <div class="bar-wrap">
-            <span class="muted">Overall attendance performance</span>
-            <div class="bar"><div></div></div>
-          </div>
+<div class="metric-grid">
+<div class="metric">Total Students<strong>32</strong></div>
+<div class="metric">Present<strong>27</strong></div>
+<div class="metric">Attendance Rate<strong>84%</strong></div>
+</div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>QR Check-In</th>
-                <th>Phone Sensor</th>
-                <th>Seat Sensor</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Sara Mousa</td>
-                <td>08:01 AM</td>
-                <td>Detected</td>
-                <td>Occupied</td>
-                <td><span class="pill present">Present</span></td>
-              </tr>
-              <tr>
-                <td>Ahmed Khalid</td>
-                <td>08:04 AM</td>
-                <td>Removed 7 min</td>
-                <td>Occupied</td>
-                <td><span class="pill warning-pill">Warning</span></td>
-              </tr>
-              <tr>
-                <td>Lina Omar</td>
-                <td>08:00 AM</td>
-                <td>Not Detected</td>
-                <td>Empty 31 min</td>
-                <td><span class="pill absent">Absent</span></td>
-              </tr>
-              <tr>
-                <td>Yousef Ali</td>
-                <td>08:02 AM</td>
-                <td>Detected</td>
-                <td>Occupied</td>
-                <td><span class="pill present">Present</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </main>
+<div class="progress"><div></div></div>
 
-  <footer>
-    Smart Chair System prototype for a university design thinking project.
-  </footer>
+<table>
+<tr>
+<th>Student</th>
+<th>QR Scan</th>
+<th>Phone Sensor</th>
+<th>Seat Sensor</th>
+<th>Status</th>
+</tr>
+<tr>
+<td>Sara Mousa</td>
+<td>08:01</td>
+<td>Detected</td>
+<td>Occupied</td>
+<td><span class="badge present">Present</span></td>
+</tr>
+<tr>
+<td>Ahmed Khalid</td>
+<td>08:03</td>
+<td>Removed</td>
+<td>Occupied</td>
+<td><span class="badge warning">Warning</span></td>
+</tr>
+<tr>
+<td>Lina Omar</td>
+<td>08:02</td>
+<td>Not Detected</td>
+<td>Empty</td>
+<td><span class="badge absent">Absent</span></td>
+</tr>
+</table>
+</div>
+</div>
 
-  <script>
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const screens = document.querySelectorAll('.screen');
+<!-- STUDENT PERFORMANCE PAGE -->
+<div id="studentStats" class="tabContent" style="display:none">
+<div class="card">
+<h2>My Attendance Performance</h2>
+<p>This section allows students to monitor their attendance habits and track their academic discipline over time.</p>
 
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabButtons.forEach(b => b.classList.remove('active'));
-        screens.forEach(s => s.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
-      });
-    });
+<div class="metric-grid">
+<div class="metric">
+<span>Classes Attended</span>
+<strong>24</strong>
+</div>
 
-    let qrScanned = false;
-    let phonePlaced = false;
-    let seatOccupied = true;
-    let emergencyMinutes = 0;
+<div class="metric">
+<span>Classes Missed</span>
+<strong>4</strong>
+</div>
 
-    const statusBox = document.getElementById('statusBox');
-    const phoneState = document.getElementById('phoneState');
-    const seatState = document.getElementById('seatState');
-    const attendanceState = document.getElementById('attendanceState');
-    const timerState = document.getElementById('timerState');
-    const phoneVisual = document.getElementById('phoneVisual');
+<div class="metric">
+<span>Attendance Rate</span>
+<strong>86%</strong>
+</div>
+</div>
 
-    function updateUI(message) {
-      statusBox.textContent = message;
-      phoneState.textContent = phonePlaced ? 'Yes' : 'No';
-      seatState.textContent = seatOccupied ? 'Yes' : 'No';
-      timerState.textContent = emergencyMinutes + ' min';
+<h3 style="margin-top:25px">Attendance Progress</h3>
+<div class="progress"><div style="width:86%"></div></div>
 
-      if (!qrScanned) {
-        attendanceState.textContent = 'Not Recorded';
-      } else if (qrScanned && phonePlaced && seatOccupied && emergencyMinutes <= 10) {
-        attendanceState.textContent = 'Present';
-      } else if (emergencyMinutes > 10 || !seatOccupied) {
-        attendanceState.textContent = 'Absent';
-      } else {
-        attendanceState.textContent = 'Pending';
-      }
-    }
+<h3 style="margin-top:25px">Recent Attendance History</h3>
+<table>
+<tr>
+<th>Date</th>
+<th>Course</th>
+<th>Status</th>
+</tr>
+<tr>
+<td>March 1</td>
+<td>Business Analytics</td>
+<td><span class="badge present">Present</span></td>
+</tr>
+<tr>
+<td>March 3</td>
+<td>Business Analytics</td>
+<td><span class="badge present">Present</span></td>
+</tr>
+<tr>
+<td>March 5</td>
+<td>Business Analytics</td>
+<td><span class="badge absent">Absent</span></td>
+</tr>
+</table>
 
-    function scanQR() {
-      qrScanned = true;
-      updateUI('QR code scanned successfully. Please place your phone on the sensor area.');
-    }
+<p style="margin-top:20px"><strong>Tip:</strong> Maintaining at least 90% attendance improves academic performance and engagement in class.</p>
+</div>
+</div>
 
-    function placePhone() {
-      if (!qrScanned) {
-        updateUI('Please scan the QR code first.');
-        return;
-      }
-      phonePlaced = true;
-      emergencyMinutes = 0;
-      phoneVisual.classList.add('phone-on-pad');
-      updateUI('Phone detected on desk sensor. Attendance recorded as present.');
-    }
+</div>
 
-    function takePhone() {
-      if (!qrScanned) {
-        updateUI('You need to scan the QR code first.');
-        return;
-      }
-      phonePlaced = false;
-      phoneVisual.classList.remove('phone-on-pad');
-      emergencyMinutes = 11;
-      updateUI('Emergency phone removal exceeded 10 minutes. Student marked absent.');
-    }
+<script>
+function showTab(id){
+const tabs=document.querySelectorAll('.tabContent');
+tabs.forEach(t=>t.style.display='none');
+document.getElementById(id).style.display='block';
 
-    function leaveSeat() {
-      seatOccupied = false;
-      updateUI('Seat sensor detected no student present for more than 30 minutes. Student marked absent.');
-    }
+const buttons=document.querySelectorAll('.tab');
+buttons.forEach(b=>b.classList.remove('active'));
 
-    updateUI('Waiting for student check-in.');
-  </script>
+event.target.classList.add('active');
+}
+
+let phonePlaced=false
+let present=false
+
+function scanQR(){
+document.getElementById('status').innerText="QR scanned successfully"
+present=true
+}
+
+function placePhone(){
+phonePlaced=true
+document.getElementById('phoneState').innerText="Yes"
+document.getElementById('attendance').innerText="Present"
+document.getElementById('status').innerText="Phone detected. Attendance recorded"
+}
+
+function takePhone(){
+document.getElementById('status').innerText="Phone removed for emergency"
+}
+
+function leaveSeat(){
+document.getElementById('attendance').innerText="Absent"
+document.getElementById('status').innerText="Seat empty. Student marked absent"
+}
+</script>
+
 </body>
 </html>
+
