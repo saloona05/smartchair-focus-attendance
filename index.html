@@ -72,7 +72,7 @@ th{background:#eef2ff}
 <option value="professor">Professor</option>
 <option value="admin">Administrator</option>
 </select>
-<button class="primary" style="margin-top:14px" onclick="loginUser()">Sign In</button>
+<button type="button" class="primary" style="margin-top:14px" onclick="loginUser()">Sign In</button>
 </div>
 
 <div id="appShell" class="hidden">
@@ -268,17 +268,44 @@ let phonePlaced=false
 let seatOccupied=true
 
 function loginUser(){
-const role=document.getElementById('roleSelect').value
+const role=document.getElementById('roleSelect').value;
+const loginScreen=document.getElementById('loginScreen');
+const appShell=document.getElementById('appShell');
+const studentNav=document.getElementById('studentNav');
+const professorNav=document.getElementById('professorNav');
 
-document.getElementById('loginScreen').classList.add('hidden')
-document.getElementById('appShell').classList.remove('hidden')
+if(!loginScreen || !appShell) return;
 
-document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
+loginScreen.style.display='none';
+appShell.classList.remove('hidden');
+appShell.style.display='block';
+
+document.querySelectorAll('.roleScreen').forEach(el=>{
+  el.classList.add('hidden');
+  el.style.display='none';
+});
+
+if(studentNav){studentNav.classList.add('hidden'); studentNav.style.display='none';}
+if(professorNav){professorNav.classList.add('hidden'); professorNav.style.display='none';}
 
 if(role==='student'){
- document.getElementById('studentNav').classList.remove('hidden')
- document.getElementById('checkin').classList.remove('hidden')
- buildChart()
+  if(studentNav){studentNav.classList.remove('hidden'); studentNav.style.display='flex';}
+  const checkin=document.getElementById('checkin');
+  if(checkin){checkin.classList.remove('hidden'); checkin.style.display='block';}
+  buildChart();
+}
+
+if(role==='professor'){
+  if(professorNav){professorNav.classList.remove('hidden'); professorNav.style.display='flex';}
+  const dashboard=document.getElementById('dashboard');
+  if(dashboard){dashboard.classList.remove('hidden'); dashboard.style.display='block';}
+}
+
+if(role==='admin'){
+  const dashboard=document.getElementById('dashboard');
+  if(professorNav){professorNav.classList.remove('hidden'); professorNav.style.display='flex';}
+  if(dashboard){dashboard.classList.remove('hidden'); dashboard.style.display='block';}
+}
 }
 
 if(role==='professor'){
@@ -287,20 +314,24 @@ if(role==='professor'){
 }
 }
 
-function logoutUser(){location.reload()}
+function logoutUser(){
+location.reload();
+}
 
 function showStudentTab(id,btn){
- document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
- document.getElementById(id).classList.remove('hidden')
- document.querySelectorAll('#studentNav .tab').forEach(b=>b.classList.remove('active'))
- btn.classList.add('active')
+ document.querySelectorAll('.roleScreen').forEach(el=>{el.classList.add('hidden'); el.style.display='none';});
+ const target=document.getElementById(id);
+ if(target){target.classList.remove('hidden'); target.style.display='block';}
+ document.querySelectorAll('#studentNav .tab').forEach(b=>b.classList.remove('active'));
+ if(btn) btn.classList.add('active');
 }
 
 function showProfessorTab(id,btn){
- document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
- document.getElementById(id).classList.remove('hidden')
- document.querySelectorAll('#professorNav .tab').forEach(b=>b.classList.remove('active'))
- btn.classList.add('active')
+ document.querySelectorAll('.roleScreen').forEach(el=>{el.classList.add('hidden'); el.style.display='none';});
+ const target=document.getElementById(id);
+ if(target){target.classList.remove('hidden'); target.style.display='block';}
+ document.querySelectorAll('#professorNav .tab').forEach(b=>b.classList.remove('active'));
+ if(btn) btn.classList.add('active');
 }
 
 function scanQR(){
@@ -376,6 +407,7 @@ alert(student + ' has been marked for a participation bonus based on a strong at
 </script>
 </body>
 </html>
+
 
 
 
