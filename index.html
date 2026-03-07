@@ -45,6 +45,7 @@ th{background:#eef2ff}
 .centerCard{max-width:460px;margin:50px auto}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .flowBox{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-top:15px}
+.searchBox{margin-top:15px}
 @media(max-width:900px){.grid,.metric-grid,.two-col{grid-template-columns:1fr}}
 </style>
 </head>
@@ -58,10 +59,9 @@ th{background:#eef2ff}
 
 <div class="container">
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="card centerCard">
 <h2>Smart Chair Login</h2>
-<p class="small">This is the first screen of the system. Users log in according to their role. Students access check-in and attendance tracking, while professors access attendance analytics and records.</p>
+<p class="small">Users log in according to their role. Students access check-in and attendance tracking, while professors access attendance analytics.</p>
 <label>University Email</label>
 <input id="email" class="input" type="email" placeholder="name@university.edu">
 <label style="display:block;margin-top:12px">Password</label>
@@ -73,11 +73,10 @@ th{background:#eef2ff}
 <option value="admin">Administrator</option>
 </select>
 <button class="primary" style="margin-top:14px" onclick="loginUser()">Sign In</button>
-<div class="notice">Students will be directed to the check-in system first, then they can view their attendance performance. Professors will be directed to the dashboard for attendance monitoring and analytics.</div>
 </div>
 
-<!-- APP SHELL -->
 <div id="appShell" class="hidden">
+
 <div class="topbar">
 <div>
 <h2 id="welcomeTitle">Welcome</h2>
@@ -97,284 +96,286 @@ th{background:#eef2ff}
 <button class="tab active" onclick="showProfessorTab('dashboard', this)">Instructor Dashboard</button>
 </div>
 
-<div id="adminNav" class="tabs hidden">
-<button class="tab active" onclick="showAdminTab('adminpanel', this)">Admin Panel</button>
-</div>
-
-<!-- STUDENT CHECK-IN -->
 <div id="checkin" class="roleScreen hidden">
 <div class="grid">
 <div class="card">
 <h2>Student Check-In</h2>
-<p class="small">Step 1: Scan the QR code on your desk. Step 2: Place your phone on the desk sensor area. Step 3: Stay seated during class. This sequence helps the system record attendance more accurately and reduce phone distraction.</p>
-<div class="flowBox">
-<strong>How the system works:</strong>
-<p class="small">The QR code identifies the student and desk. The phone sensor area represents the real desk sensor where the phone should be placed during class. The seat sensor confirms that the student remains physically present. If the phone is removed for too long or the seat stays empty, the student may be marked absent.</p>
-</div>
-<div class="qrBox" style="margin-top:15px">
-<div class="qr"></div>
-<p><strong>Desk QR Code</strong></p>
-<p class="small">Scan this first to start attendance verification.</p>
-</div>
+<p class="small">Students scan the desk QR code, place their phone on the desk sensor, and remain seated to confirm attendance.</p>
+<div class="qrBox"><div class="qr"></div><p><strong>Desk QR Code</strong></p></div>
 <div class="phonePad">
 <h3>Phone Sensor Area</h3>
 <div class="phone"></div>
-<p class="small">In the real classroom, this represents the physical sensor area on the desk where the student places the phone during class.</p>
 <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-<button class="primary" onclick="scanQR()">1. Scan QR Code</button>
-<button class="secondary" onclick="placePhone()">2. Place Phone on Sensor</button>
-<button class="warningBtn" onclick="takePhone()">Emergency Phone Removal</button>
-<button class="dangerBtn" onclick="leaveSeat()">Seat Becomes Empty</button>
+<button class="primary" onclick="scanQR()">Scan QR</button>
+<button class="secondary" onclick="placePhone()">Place Phone</button>
+<button class="warningBtn" onclick="takePhone()">Emergency Call</button>
+<button class="dangerBtn" onclick="leaveSeat()">Leave Seat</button>
 </div>
 </div>
 <div id="status" class="status">Waiting for student check-in.</div>
 </div>
 
 <div class="card">
-<h2>Live Attendance Status</h2>
-<p><strong>Name:</strong> Sara Mousa</p>
-<p><strong>Course:</strong> Business Analytics</p>
+<h2>Live Status</h2>
 <p><strong>QR Scanned:</strong> <span id="qrState">No</span></p>
-<p><strong>Phone Detected on Desk:</strong> <span id="phoneState">No</span></p>
+<p><strong>Phone Detected:</strong> <span id="phoneState">No</span></p>
 <p><strong>Seat Occupied:</strong> <span id="seatState">Yes</span></p>
-<p><strong>Attendance Status:</strong> <span id="attendance">Not Recorded</span></p>
-<div class="notice">This panel helps students clearly understand what the system is checking before attendance is confirmed.</div>
+<p><strong>Attendance:</strong> <span id="attendance">Not Recorded</span></p>
 </div>
 </div>
 </div>
 
-<!-- STUDENT PERFORMANCE -->
 <div id="performance" class="roleScreen hidden">
 <div class="card">
 <h2>My Attendance Performance</h2>
-<p class="small">This section helps students monitor their attendance habits, stay aware of missed classes, and improve their academic discipline over time.</p>
 <div class="metric-grid">
 <div class="metric"><span>Classes Attended</span><strong>24</strong></div>
 <div class="metric"><span>Classes Missed</span><strong>4</strong></div>
 <div class="metric"><span>Attendance Rate</span><strong>86%</strong></div>
 </div>
-<h3 style="margin-top:25px">Attendance Progress</h3>
-<div class="progress"><div style="width:86%"></div></div>
-<h3 style="margin-top:25px">Recent Attendance History</h3>
-<table>
-<tr><th>Date</th><th>Course</th><th>Status</th></tr>
-<tr><td>March 1</td><td>Business Analytics</td><td><span class="badge present">Present</span></td></tr>
-<tr><td>March 3</td><td>Business Analytics</td><td><span class="badge present">Present</span></td></tr>
-<tr><td>March 5</td><td>Business Analytics</td><td><span class="badge absent">Absent</span></td></tr>
-</table>
-<div class="two-col" style="margin-top:25px">
-<div>
-<h3>Weekly Attendance Tracker</h3>
-<table>
-<tr><th>Week</th><th>Rate</th><th>Comment</th></tr>
-<tr><td>Week 1</td><td>100%</td><td>Excellent consistency</td></tr>
-<tr><td>Week 2</td><td>80%</td><td>One missed class</td></tr>
-<tr><td>Week 3</td><td>90%</td><td>Strong improvement</td></tr>
-<tr><td>Week 4</td><td>75%</td><td>Needs attention</td></tr>
-</table>
+
+<h3 style="margin-top:25px">Attendance Streak</h3>
+<div class="metric-grid">
+<div class="metric"><span>Current Streak</span><strong>7 Classes</strong></div>
+<div class="metric"><span>Best Streak</span><strong>12 Classes</strong></div>
+<div class="metric"><span>Focus Score</span><strong>88%</strong></div>
 </div>
-<div>
-<h3>Student Alerts</h3>
-<div class="notice"><strong>Warning:</strong> Your attendance dropped below 85% in Week 4.</div>
-<div class="notice"><strong>Reminder:</strong> Return your phone to the desk sensor within 10 minutes after emergency use.</div>
-<div class="notice"><strong>Goal:</strong> Attend the next 3 classes to raise your attendance above 90%.</div>
+
+<div class="notice">Students can build streaks by attending classes consistently, returning their phones to the desk sensor on time, and staying present during the lecture.</div>
+
+<h3 style="margin-top:25px">Focus and Phone Control Features</h3>
+<div class="two-col">
+<div class="flowBox">
+<strong>Phone-Free Class Time</strong>
+<p class="small">The system encourages students to keep their phones on the desk sensor during class, helping reduce unnecessary checking of notifications and social media.</p>
+</div>
+<div class="flowBox">
+<strong>Emergency Use Limit</strong>
+<p class="small">Students may remove their phones for emergencies, but the timed return rule helps prevent long periods of phone use during lectures.</p>
+</div>
+<div class="flowBox">
+<strong>Focus Score Tracking</strong>
+<p class="small">Students receive a focus score based on consistent attendance, staying seated, and limited phone removal, helping them monitor their classroom discipline.</p>
+</div>
+<div class="flowBox">
+<strong>Progress Awareness</strong>
+<p class="small">Attendance history, streaks, and alerts make students more aware of their habits and can motivate them to reduce phone dependence over time.</p>
 </div>
 </div>
+
 <h3 style="margin-top:25px">Attendance Chart</h3>
 <canvas id="attendanceChart" height="120"></canvas>
-<h3 style="margin-top:25px">Focus Score</h3>
-<p class="small">This score estimates classroom discipline based on timely check-in, seat presence, and reduced phone removal.</p>
-<div class="metric-grid">
-<div class="metric"><span>Focus Score</span><strong>88%</strong></div>
-<div class="metric"><span>On-Time Check-Ins</span><strong>92%</strong></div>
-<div class="metric"><span>Emergency Phone Events</span><strong>2</strong></div>
-</div>
 </div>
 </div>
 
-<!-- PROFESSOR DASHBOARD -->
 <div id="dashboard" class="roleScreen hidden">
 <div class="card">
-<h2>Instructor Dashboard</h2>
-<p class="small">This dashboard helps instructors monitor attendance, verify classroom presence, and analyze student attendance patterns.</p>
-<div class="metric-grid">
-<div class="metric">Total Students<strong>32</strong></div>
-<div class="metric">Present<strong>27</strong></div>
-<div class="metric">Attendance Rate<strong>84%</strong></div>
-</div>
-<div class="progress"><div></div></div>
-<table>
-<tr><th>Student</th><th>QR Scan</th><th>Phone Sensor</th><th>Seat Sensor</th><th>Status</th></tr>
-<tr><td>Sara Mousa</td><td>08:01</td><td>Detected</td><td>Occupied</td><td><span class="badge present">Present</span></td></tr>
-<tr><td>Ahmed Khalid</td><td>08:03</td><td>Removed</td><td>Occupied</td><td><span class="badge warning">Warning</span></td></tr>
-<tr><td>Lina Omar</td><td>08:02</td><td>Not Detected</td><td>Empty</td><td><span class="badge absent">Absent</span></td></tr>
+<h2>Instructor Attendance Tracking</h2>
+<p class="small">Professors can search students, monitor attendance, and update status if needed.</p>
+
+<input class="input searchBox" placeholder="Search student..." onkeyup="searchStudent(this.value)">
+
+<table id="attendanceTable">
+<tr>
+<th>Student</th>
+<th>Status</th>
+<th>Update</th>
+</tr>
+<tr>
+<td>Sara Mousa</td>
+<td><span class="badge present">Present</span></td>
+<td>
+<button onclick="markPresent(this)">Present</button>
+<button onclick="markAbsent(this)">Absent</button>
+</td>
+</tr>
+<tr>
+<td>Ahmed Khalid</td>
+<td><span class="badge warning">Warning</span></td>
+<td>
+<button onclick="markPresent(this)">Present</button>
+<button onclick="markAbsent(this)">Absent</button>
+</td>
+</tr>
+<tr>
+<td>Lina Omar</td>
+<td><span class="badge absent">Absent</span></td>
+<td>
+<button onclick="markPresent(this)">Present</button>
+<button onclick="markAbsent(this)">Absent</button>
+</td>
+</tr>
 </table>
-<div class="notice">The website stores attendance information and allows professors to monitor patterns and student participation more efficiently than manual attendance.</div>
+
+<div class="metric-grid" style="margin-top:25px">
+<div class="metric"><span>Total Students</span><strong>32</strong></div>
+<div class="metric"><span>Present</span><strong>27</strong></div>
+<div class="metric"><span>Attendance Rate</span><strong>84%</strong></div>
+</div>
+
+<h3 style="margin-top:25px">Attendance Leaderboard</h3>
+<table id="streakTable">
+<tr>
+<th>Rank</th>
+<th>Student</th>
+<th>Current Streak</th>
+<th>Focus Score</th>
+<th>Reward</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Lina Omar</td>
+<td>9</td>
+<td>94%</td>
+<td><button onclick="giveBonus(this)">Give Bonus</button></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sara Mousa</td>
+<td>7</td>
+<td>88%</td>
+<td><button onclick="giveBonus(this)">Give Bonus</button></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ahmed Khalid</td>
+<td>3</td>
+<td>71%</td>
+<td><button onclick="giveBonus(this)">Give Bonus</button></td>
+</tr>
+</table>
+
+<div class="notice">The leaderboard allows professors to recognize students with the strongest attendance streaks and best focus performance. This can be used to reward highly committed students with bonus marks, recognition, or class incentives.</div>
+
+<h3 style="margin-top:25px">Phone Distraction Insights</h3>
+<div class="metric-grid">
+<div class="metric"><span>Low Phone Removal</span><strong>18</strong></div>
+<div class="metric"><span>Frequent Removals</span><strong>6</strong></div>
+<div class="metric"><span>Improved Focus This Month</span><strong>+12%</strong></div>
+</div>
+<div class="notice">These insights help professors identify whether students are improving their classroom focus and reducing unnecessary phone interaction over time.</div>
+
 </div>
 </div>
 
-<!-- ADMIN -->
-<div id="adminpanel" class="roleScreen hidden">
-<div class="card">
-<h2>Administrator Panel</h2>
-<p class="small">This optional panel shows how the system could also support device and classroom management in the future.</p>
-<ul>
-<li>Manage classroom devices and sensor status</li>
-<li>Assign desks and QR codes to students</li>
-<li>Review attendance system reports</li>
-</ul>
 </div>
-</div>
-</div>
+
 </div>
 
 <script>
-let qrScanned = false;
-let phonePlaced = false;
-let seatOccupied = true;
-let attendanceChartMade = false;
+let qrScanned=false
+let phonePlaced=false
+let seatOccupied=true
 
 function loginUser(){
-  const role = document.getElementById('roleSelect').value;
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('appShell').classList.remove('hidden');
+const role=document.getElementById('roleSelect').value
 
-  document.getElementById('studentNav').classList.add('hidden');
-  document.getElementById('professorNav').classList.add('hidden');
-  document.getElementById('adminNav').classList.add('hidden');
-  hideAllRoleScreens();
-  resetTabButtons();
+document.getElementById('loginScreen').classList.add('hidden')
+document.getElementById('appShell').classList.remove('hidden')
 
-  if(role === 'student'){
-    document.getElementById('welcomeTitle').innerText = 'Welcome, Student';
-    document.getElementById('welcomeText').innerText = 'Start with classroom check-in, then review your attendance performance and alerts.';
-    document.getElementById('studentNav').classList.remove('hidden');
-    document.getElementById('checkin').classList.remove('hidden');
-    activateFirst('#studentNav');
-    buildChart();
-  } else if(role === 'professor'){
-    document.getElementById('welcomeTitle').innerText = 'Welcome, Professor';
-    document.getElementById('welcomeText').innerText = 'View attendance records, monitor student presence, and analyze classroom attendance trends.';
-    document.getElementById('professorNav').classList.remove('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    activateFirst('#professorNav');
-  } else {
-    document.getElementById('welcomeTitle').innerText = 'Welcome, Administrator';
-    document.getElementById('welcomeText').innerText = 'Manage system settings, desks, QR codes, and support tools.';
-    document.getElementById('adminNav').classList.remove('hidden');
-    document.getElementById('adminpanel').classList.remove('hidden');
-    activateFirst('#adminNav');
-  }
+document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
+
+if(role==='student'){
+ document.getElementById('studentNav').classList.remove('hidden')
+ document.getElementById('checkin').classList.remove('hidden')
+ buildChart()
 }
 
-function logoutUser(){
-  document.getElementById('appShell').classList.add('hidden');
-  document.getElementById('loginScreen').classList.remove('hidden');
+if(role==='professor'){
+ document.getElementById('professorNav').classList.remove('hidden')
+ document.getElementById('dashboard').classList.remove('hidden')
+}
 }
 
-function hideAllRoleScreens(){
-  document.querySelectorAll('.roleScreen').forEach(el => el.classList.add('hidden'));
+function logoutUser(){location.reload()}
+
+function showStudentTab(id,btn){
+ document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
+ document.getElementById(id).classList.remove('hidden')
+ document.querySelectorAll('#studentNav .tab').forEach(b=>b.classList.remove('active'))
+ btn.classList.add('active')
 }
 
-function resetTabButtons(){
-  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-}
-
-function activateFirst(navSelector){
-  const first = document.querySelector(navSelector + ' .tab');
-  if(first) first.classList.add('active');
-}
-
-function showStudentTab(id, btn){
-  hideAllRoleScreens();
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('#studentNav .tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if(id === 'performance') buildChart();
-}
-
-function showProfessorTab(id, btn){
-  hideAllRoleScreens();
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('#professorNav .tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function showAdminTab(id, btn){
-  hideAllRoleScreens();
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('#adminNav .tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function showProfessorTab(id,btn){
+ document.querySelectorAll('.roleScreen').forEach(el=>el.classList.add('hidden'))
+ document.getElementById(id).classList.remove('hidden')
+ document.querySelectorAll('#professorNav .tab').forEach(b=>b.classList.remove('active'))
+ btn.classList.add('active')
 }
 
 function scanQR(){
-  qrScanned = true;
-  document.getElementById('qrState').innerText = 'Yes';
-  document.getElementById('status').innerText = 'QR code scanned successfully. Next, place the phone on the desk sensor.';
-  updateAttendance();
+qrScanned=true
+document.getElementById('qrState').innerText='Yes'
+document.getElementById('status').innerText='QR scanned successfully'
+updateAttendance()
 }
 
 function placePhone(){
-  if(!qrScanned){
-    document.getElementById('status').innerText = 'Please scan the QR code first before placing the phone.';
-    return;
-  }
-  phonePlaced = true;
-  document.getElementById('phoneState').innerText = 'Yes';
-  document.getElementById('status').innerText = 'Phone detected on the desk sensor. Attendance has been confirmed as present.';
-  updateAttendance();
+phonePlaced=true
+document.getElementById('phoneState').innerText='Yes'
+updateAttendance()
 }
 
 function takePhone(){
-  if(!qrScanned){
-    document.getElementById('status').innerText = 'Please scan the QR code first.';
-    return;
-  }
-  phonePlaced = false;
-  document.getElementById('phoneState').innerText = 'No';
-  document.getElementById('status').innerText = 'Phone removed for emergency use. In the real system, the student would be given up to 10 minutes to return the phone before being marked absent.';
-  document.getElementById('attendance').innerText = 'Warning';
+document.getElementById('attendance').innerText='Warning'
+document.getElementById('status').innerText='Phone temporarily removed'
 }
 
 function leaveSeat(){
-  seatOccupied = false;
-  document.getElementById('seatState').innerText = 'No';
-  document.getElementById('attendance').innerText = 'Absent';
-  document.getElementById('status').innerText = 'Seat sensor shows the seat is empty. In the real system, if the seat remains empty for over 30 minutes, the student would be marked absent.';
+seatOccupied=false
+document.getElementById('seatState').innerText='No'
+document.getElementById('attendance').innerText='Absent'
 }
 
 function updateAttendance(){
-  if(qrScanned && phonePlaced && seatOccupied){
-    document.getElementById('attendance').innerText = 'Present';
-  } else if(qrScanned){
-    document.getElementById('attendance').innerText = 'Pending';
-  }
+if(qrScanned&&phonePlaced&&seatOccupied){
+document.getElementById('attendance').innerText='Present'
+}
 }
 
 function buildChart(){
-  if(attendanceChartMade) return;
-  const chartEl = document.getElementById('attendanceChart');
-  if(chartEl){
-    new Chart(chartEl, {
-      type: 'bar',
-      data: {
-        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-        datasets: [{ label: 'Attendance %', data: [100, 80, 90, 75] }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, max: 100 } }
-      }
-    });
-    attendanceChartMade = true;
-  }
+const chart=document.getElementById('attendanceChart')
+if(!chart) return
+new Chart(chart,{
+ type:'bar',
+ data:{
+ labels:['Week1','Week2','Week3','Week4'],
+ datasets:[{label:'Attendance %',data:[100,80,90,75]}]
+ }
+})
+}
+
+function markPresent(btn){
+const row=btn.parentElement.parentElement
+row.children[1].innerHTML='<span class="badge present">Present</span>'
+}
+
+function markAbsent(btn){
+const row=btn.parentElement.parentElement
+row.children[1].innerHTML='<span class="badge absent">Absent</span>'
+}
+
+function searchStudent(value){
+const rows=document.querySelectorAll('#attendanceTable tr')
+rows.forEach((row,i)=>{
+ if(i===0)return
+ const name=row.children[0].innerText.toLowerCase()
+ row.style.display=name.includes(value.toLowerCase())?'':'none'
+})
+}
+
+function giveBonus(btn){
+const row=btn.parentElement.parentElement
+const student=row.children[1].innerText
+const streak=row.children[2].innerText
+alert(student + ' has been marked for a participation bonus based on a strong attendance streak of ' + streak + ' classes and good focus performance.')
+} else {
+ alert(student + ' is not yet eligible for a bonus because the attendance streak is still low.')
+}
 }
 </script>
 </body>
 </html>
 
-</body>
-</html>
 
 
